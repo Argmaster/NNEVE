@@ -16,6 +16,8 @@ theme:
         name: Switch to light mode
 nav:
   - Home: index.md
+  - Quantum Oscilator:
+    - Training: "quantum_oscilator/tarining.md"
   - Development:
     - Feature flow: "develop/feature.md"
     - Tox usage: "develop/tox_basics.md"
