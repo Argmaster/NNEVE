@@ -55,3 +55,13 @@ repos:
         args: [--branch, master, --branch, master]
       # - id: requirements-txt-fixer
       - id: trailing-whitespace
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.7.1
+    hooks:
+      - id: prettier
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.18.0
+    hooks:
+      - id: eslint
