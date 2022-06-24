@@ -40,7 +40,7 @@ of neurons in each hidden layer, and changing the precision of the data.
 
 | name            | description                             |
 | --------------- | --------------------------------------- |
-| constants       | constant values used in neutarl network |
+| constants       | constant values used in neutral network |
 | is_debug        |                                         |
 | loss_function   | loss function of neutral network        |
 | is_console_mode |                                         |
@@ -60,9 +60,9 @@ to decode structure of neutral network.
 ### Returns
 
 | type                   | description |
-| ---------------------- | ----------- | --- |
+| ---------------------- | ----------- |
 | `Layers (input layer)` |             |
-| `Layers (dense)`       |             |     |
+| `Layers (dense)`       |             | 
 
 ## Graph of architecture
 
