@@ -32,9 +32,11 @@ class TestQOTracker:
         )
         return QONetwork(constants=constants, is_debug=True)
 
-    @pytest.mark.skip("Not functional due to size mismatch")
+    # @pytest.mark.skip("Not functional due to size mismatch")
     def test_load_network(self, network: QONetwork) -> None:  # noqa: FNE004
         network.load(DATA_DIR / "example.w")
+        plt.clf()
+        plt.figure(figsize=(10, 10), dpi=100)
         network.plot_solution()
 
         buffer = BytesIO()

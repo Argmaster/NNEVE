@@ -64,7 +64,7 @@ class QOTracker(BaseModel):
                 solution_ax,
             ),
         ) = plt.subplots(
-            2, 5
+            2, 5, figsize=(20, 8), dpi=300, constrained_layout=True
         )  # type: ignore
         # Completely hides an unused blank plot
         _.axis("off")
@@ -114,7 +114,6 @@ class QOTracker(BaseModel):
             where=all_ax,
             label="All",
             logy=True,
-            logx=True,
         )
         self._plot(
             solution_y,

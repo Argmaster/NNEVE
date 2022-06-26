@@ -86,13 +86,19 @@ class QONetwork(keras.Model):
             name="dense_2",
             dtype=tf.float32,
         )(d1)
+        d3 = keras.layers.Dense(
+            self.constants.neuron_count,
+            activation=tf.sin,
+            name="dense_3",
+            dtype=tf.float32,
+        )(d2)
         # single value output from neural network
         outputs = keras.layers.Dense(
             1,
             # ; activation=tf.sin,
             name="predictions",
             dtype=tf.float32,
-        )(d2)
+        )(d3)
         # single output from full network, λ is accessed by single call
         # to "eigenvalue" Dense layer - much cheaper op
         return [inputs], [outputs, eigenvalue_out]
@@ -178,7 +184,6 @@ class QONetwork(keras.Model):
         params: QOParams,
         generations: int = 5,
         epochs: int = 1000,
-        plot: bool = True,
     ) -> Iterable["QONetwork"]:
         with suppress(KeyboardInterrupt):
             for i in range(generations):
@@ -186,22 +191,13 @@ class QONetwork(keras.Model):
                     f"Generation: {i + 1:4.0f} our of "
                     f"{generations:.0f}, ({i / generations:.2%})"
                 )
-                best = self.train(params, epochs)
-
+                self.train(params, epochs)
                 params.update()
-
-                if plot:
-                    x = self.constants.sample()
-                    y2, _ = self(x)
-                    self.constants.tracker.plot(y2, x)
-                yield best
+                yield self
 
     def train(  # noqa: CCR001
         self, params: QOParams, epochs: int = 10
-    ) -> "QONetwork":
-        smallest_loss = 1e20
-        best_model = self.get_deepcopy()
-
+    ) -> None:
         x = self.constants.sample()
         if self.is_console_mode:
             with Progress() as progress:
@@ -221,15 +217,9 @@ class QONetwork(keras.Model):
                     )
         else:
             for i in range(epochs):
-                loss = self._train_step(x, params)
+                self._train_step(x, params)
                 description = self.constants.tracker.get_trace(i)
                 logging.info(description)
-                # TODO Check performance impact
-                if i % 5 == 0 and loss < smallest_loss:
-                    best_model = self.get_deepcopy()
-                    smallest_loss = loss
-
-        return best_model
 
     def _train_step(self, x: tf.Tensor, params: QOParams) -> float:
         deriv_x = tf.Variable(initial_value=x)
