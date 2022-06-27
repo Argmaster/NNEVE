@@ -17,13 +17,16 @@ theme:
 nav:
   - Home: index.md
   - Quantum Oscilator:
-    - Introduction: "quantum_oscilator/introduction.md"
+      - Introduction: "quantum_oscilator/introduction.md"
+      - Learning cycle: "quantum_oscilator/learning_cycle.md"
+      - QOConstants: "quantum_oscilator/constants.md"
+      - QOParams: "quantum_oscilator/params.md"
   - Development:
-    - Feature flow: "develop/feature.md"
-    - Tox basics: "develop/tox_basics.md"
-    - Documentation: "develop/docs.md"
-    - Formatting code: "develop/formatting.md"
-    - Quality checks: "develop/quality_checks.md"
+      - Feature flow: "develop/feature.md"
+      - Tox basics: "develop/tox_basics.md"
+      - Documentation: "develop/docs.md"
+      - Formatting code: "develop/formatting.md"
+      - Quality checks: "develop/quality_checks.md"
   - HowTo:
       - Set up tox for development: "howto/tox_devenv.md"
       - Set up Visual Studio Code: "howto/set_up_vsc.md"
@@ -50,5 +53,4 @@ markdown_extensions:
 plugins:
   - search
   - macros:
-      include_dir:
-        .
+      include_dir: .

@@ -40,19 +40,19 @@ isort .
 currently automatically formats docstrings to follow a subset of the PEP 257
 conventions. Below are the relevant items quoted from PEP 257.
 
--   For consistency, always use triple double quotes around docstrings.
--   Triple quotes are used even though the string fits on one line.
--   Multi-line docstrings consist of a summary line just like a one-line
-    docstring, followed by a blank line, followed by a more elaborate
-    description.
--   Unless the entire docstring fits on a line, place the closing quotes on a
-    line by themselves.
+- For consistency, always use triple double quotes around docstrings.
+- Triple quotes are used even though the string fits on one line.
+- Multi-line docstrings consist of a summary line just like a one-line
+  docstring, followed by a blank line, followed by a more elaborate
+  description.
+- Unless the entire docstring fits on a line, place the closing quotes on a
+  line by themselves.
 
 `docformatter` also handles some of the PEP 8 conventions.
 
--   Don’t write string literals that rely on significant trailing whitespace.
-    Such trailing whitespace is visually indistinguishable and some editors (or
-    more recently, reindent.py) will trim them.
+- Don’t write string literals that rely on significant trailing whitespace.
+  Such trailing whitespace is visually indistinguishable and some editors (or
+  more recently, reindent.py) will trim them.
 
 Manual usage valid for this project:
 

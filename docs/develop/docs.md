@@ -2,9 +2,9 @@
 
 ## Handy links
 
--   [Markdownguide.org Basic Syntax](https://www.markdownguide.org/basic-syntax/){:target="\_blank"}
--   [Markdownguide.org Extended Syntax](https://www.markdownguide.org/extended-syntax/){:target="\_blank"}
--   [MkDocs-Material Reference](https://squidfunk.github.io/mkdocs-material/reference/){:target="\_blank"}
+- [Markdownguide.org Basic Syntax](https://www.markdownguide.org/basic-syntax/){:target="\_blank"}
+- [Markdownguide.org Extended Syntax](https://www.markdownguide.org/extended-syntax/){:target="\_blank"}
+- [MkDocs-Material Reference](https://squidfunk.github.io/mkdocs-material/reference/){:target="\_blank"}
 
 ## MkDocs
 
@@ -14,15 +14,15 @@ documentation. Documentation source files are written in Markdown, and
 configured with a single YAML configuration file. Start by reading the
 introductory tutorial, then check the User Guide for more information.
 
--   [Main webpage](https://www.mkdocs.org/){:target="\_blank"}
--   [User guide](https://www.mkdocs.org/user-guide/){:target="\_blank"}
+- [Main webpage](https://www.mkdocs.org/){:target="\_blank"}
+- [User guide](https://www.mkdocs.org/user-guide/){:target="\_blank"}
 
 We are also using
 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/){:target="\_blank"}
 theme for documentation which is a separate package.
 
--   [Main webpage](https://squidfunk.github.io/mkdocs-material/){:target="\_blank"}
--   [Reference](https://squidfunk.github.io/mkdocs-material/reference/){:target="\_blank"}
+- [Main webpage](https://squidfunk.github.io/mkdocs-material/){:target="\_blank"}
+- [Reference](https://squidfunk.github.io/mkdocs-material/reference/){:target="\_blank"}
 
 ```
 Usage: mkdocs [OPTIONS] COMMAND [ARGS]...

@@ -16,9 +16,9 @@
 
 6. Navigate to
 
-    - Windows: `NNEVE/.tox/devenv/Scripts/python.exe`
+   - Windows: `NNEVE/.tox/devenv/Scripts/python.exe`
 
-    - Linux: `NNEVE/.tox/devenv/bin/python`
+   - Linux: `NNEVE/.tox/devenv/bin/python`
 
 7. Select file `python.exe`
 
@@ -26,7 +26,7 @@
 
 9. Enter `>Developer: Reload Window` and click `Enter`
 
-    ![Image title](img/reload_window.png)
+   ![Image title](img/reload_window.png)
 
 10. Open terminal by pulling from edge of status bar
 
