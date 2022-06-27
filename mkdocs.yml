@@ -18,6 +18,9 @@ nav:
   - Home: index.md
   - Quantum Oscilator:
       - Introduction: "quantum_oscilator/introduction.md"
+      - Learning cycle: "quantum_oscilator/learning_cycle.md"
+      - QOConstants: "quantum_oscilator/constants.md"
+      - QOParams: "quantum_oscilator/params.md"
   - Development:
       - Feature flow: "develop/feature.md"
       - Tox basics: "develop/tox_basics.md"
