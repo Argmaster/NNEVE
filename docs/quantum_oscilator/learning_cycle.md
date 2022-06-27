@@ -13,7 +13,6 @@ constants = QOConstants(
     fb=0.0,
     sample_size=1200,
     tracker=QOTracker(),
-    neuron_count=50,
 )
 ```
 

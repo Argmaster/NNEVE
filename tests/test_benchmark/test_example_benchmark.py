@@ -4,8 +4,8 @@ from typing import Any, Callable, Iterable, List, Tuple
 
 import tensorflow as tf
 
-from nneve.benchmark import disable_gpu_or_skip, plot_multi_sample
-from nneve.benchmark.plotting import pretty_bytes
+from nneve.utility import disable_gpu_or_skip, plot_multi_sample
+from nneve.utility.plotting import pretty_bytes
 
 DIR = Path(__file__).parent
 DATA_DIR = DIR / "data"

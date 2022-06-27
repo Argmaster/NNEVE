@@ -5,10 +5,10 @@ import matplotlib
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
-from nneve.benchmark.testing import disable_gpu_or_skip
 from nneve.quantum_oscilator.network import QOConstants, QONetwork
 from nneve.quantum_oscilator.params import QOParams
 from nneve.quantum_oscilator.tracker import QOTracker
+from nneve.utility.testing import disable_gpu_or_skip
 
 EXAMPLES_CODE = Path(__file__).parent
 EXAMPLES_DIR = EXAMPLES_CODE.parent
@@ -27,7 +27,6 @@ constants = QOConstants(
     fb=0.0,
     sample_size=1200,
     tracker=QOTracker(),
-    neuron_count=50,
 )
 network = QONetwork(constants=constants, is_debug=True)
 
@@ -40,7 +39,7 @@ for index, nn in enumerate(
         epochs=1000,
     )
 ):
-    x = nn.constants.sample()
+    x = nn.constants.get_sample()
     y2, _ = nn(x)
     nn.constants.tracker.plot(y2, x)
     plt.savefig(PLOTS_DIR / f"{index}.png")

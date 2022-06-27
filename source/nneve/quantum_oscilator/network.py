@@ -4,7 +4,7 @@ import typing
 from contextlib import suppress
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Callable, Iterable, List, Tuple, cast
+from typing import Any, Callable, Iterable, List, Optional, Tuple, cast
 
 import tensorflow as tf
 from matplotlib import pyplot as plt
@@ -33,12 +33,12 @@ class QONetwork(keras.Model):
 
     def __init__(
         self,
-        constants: QOConstants,
+        constants: Optional[QOConstants] = None,
         is_debug: bool = False,
         is_console_mode: bool = True,
         name: str = "QONetwork",
     ):
-        self.constants = constants
+        self.constants = constants if constants is not None else QOConstants()
         self.is_console_mode = is_console_mode
         self.is_debug = is_debug
         inputs, outputs = self.assemble_hook()
@@ -81,13 +81,13 @@ class QONetwork(keras.Model):
         )(input_and_eigenvalue)
         # internal second layer
         d2 = keras.layers.Dense(
-            self.constants.neuron_count,
+            50,
             activation=tf.sin,
             name="dense_2",
             dtype=tf.float32,
         )(d1)
         d3 = keras.layers.Dense(
-            self.constants.neuron_count,
+            50,
             activation=tf.sin,
             name="dense_3",
             dtype=tf.float32,
@@ -169,7 +169,7 @@ class QONetwork(keras.Model):
         def potential(x: tf.Tensor) -> tf.Tensor:  # pragma: no cover
             return tf.divide(tf.multiply(self.constants.k, tf.square(x)), 2)
 
-        if self.is_debug:  # pragma: no cover
+        if self.is_debug:
             self._potential_function = potential
             self._boundary_function = boundary
             self._parametric_solution_function = parametric_solution
@@ -198,7 +198,7 @@ class QONetwork(keras.Model):
     def train(  # noqa: CCR001
         self, params: QOParams, epochs: int = 10
     ) -> None:
-        x = self.constants.sample()
+        x = self.constants.get_sample()
         if self.is_console_mode:
             with Progress() as progress:
                 task = progress.add_task(
@@ -228,7 +228,7 @@ class QONetwork(keras.Model):
             loss_value, stats = self.loss_function(
                 x,
                 deriv_x,
-                *params.extra(),
+                *params.get_extra(),
             )
 
         trainable_vars = self.trainable_variables
@@ -260,5 +260,5 @@ class QONetwork(keras.Model):
         self.set_weights(weights)
 
     def plot_solution(self) -> None:
-        x = self.constants.sample()
+        x = self.constants.get_sample()
         plt.plot(x, self(x)[0])

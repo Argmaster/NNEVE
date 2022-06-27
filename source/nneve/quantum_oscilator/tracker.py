@@ -9,14 +9,13 @@ from pydantic import BaseModel, Field
 
 class QOTracker(BaseModel):
 
+    total_loss: List[float] = Field(default_factory=list)
     eigenvalue: List[float] = Field(default_factory=list)
     residuum: List[float] = Field(default_factory=list)
-    drive_loss: List[float] = Field(default_factory=list)
     function_loss: List[float] = Field(default_factory=list)
     eigenvalue_loss: List[float] = Field(default_factory=list)
+    drive_loss: List[float] = Field(default_factory=list)
     c: List[float] = Field(default_factory=list)
-
-    total_loss: List[float] = Field(default_factory=list)
 
     def push_stats(  # noqa: CFQ002
         self,
@@ -38,15 +37,16 @@ class QOTracker(BaseModel):
         self.c.append(c)
 
     def get_trace(self, index: int) -> str:
+        assert len(self.total_loss) > 0
+        assert len(self.eigenvalue) > 0
+        assert len(self.c) > 0
         return (
             f"epoch: {index:<6.0f} loss: {self.total_loss[-1]:<10.4f} λ: "
             f"{self.eigenvalue[-1]:<10.4f} c: {self.c[-1]:<5.2f}"
         )
 
     def plot(
-        self,
-        solution_y: Sequence[float],
-        solution_x: Sequence[float],
+        self, solution_y: Sequence[float], solution_x: Sequence[float]
     ) -> Figure:
         fig, (
             (
@@ -138,6 +138,7 @@ class QOTracker(BaseModel):
             else:
                 _x = x
 
+            # TODO: use dictionary instead
             if logy and not logx:
                 where.semilogy(_x, sequence)
             elif not logy and logx:
