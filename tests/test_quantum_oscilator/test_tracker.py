@@ -26,10 +26,11 @@ class TestQOTracker:
 
     def test_plotting(self, network: QONetwork) -> None:
         network.summary()
-        for _ in network.train_generations(
-            QOParams(c=-2.0),
-            generations=4,
-            epochs=10,
-            plot=True,
+        for _ in enumerate(
+            network.train_generations(
+                QOParams(c=-2.0, c_step=0.48),
+                generations=4,
+                epochs=10,
+            )
         ):
             pass

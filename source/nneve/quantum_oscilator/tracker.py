@@ -15,7 +15,6 @@ class QOTracker(BaseModel):
     function_loss: List[float] = Field(default_factory=list)
     eigenvalue_loss: List[float] = Field(default_factory=list)
     c: List[float] = Field(default_factory=list)
-    parametric_solution: List[float] = Field(default_factory=list)
 
     total_loss: List[float] = Field(default_factory=list)
 
@@ -28,7 +27,7 @@ class QOTracker(BaseModel):
         eigenvalue_loss: float,
         drive_loss: float,
         c: float,
-        parametric_solution: float,
+        *_: float,
     ) -> None:
         self.total_loss.append(float(total_loss))
         self.eigenvalue.append(float(eigenvalue))
@@ -37,7 +36,6 @@ class QOTracker(BaseModel):
         self.eigenvalue_loss.append(float(eigenvalue_loss))
         self.drive_loss.append(float(drive_loss))
         self.c.append(c)
-        self.parametric_solution.append(parametric_solution)
 
     def get_trace(self, index: int) -> str:
         return (
@@ -47,7 +45,7 @@ class QOTracker(BaseModel):
 
     def plot(
         self,
-        *solution_y: Sequence[float],
+        solution_y: Sequence[float],
         solution_x: Sequence[float],
     ) -> Figure:
         fig, (
@@ -61,13 +59,15 @@ class QOTracker(BaseModel):
             (
                 drive_loss_ax,
                 c_ax,
-                parametric_solution_ax,
+                _,
                 all_ax,
                 solution_ax,
             ),
         ) = plt.subplots(
-            2, 5
+            2, 5, figsize=(20, 8), dpi=300, constrained_layout=True
         )  # type: ignore
+        # Completely hides an unused blank plot
+        _.axis("off")
         self._plot(self.eigenvalue, where=eigenvalue_ax, label="Eigenvalue")
         self._plot(
             self.residuum,
@@ -105,11 +105,6 @@ class QOTracker(BaseModel):
             label="Drive (C)",
         )
         self._plot(
-            self.parametric_solution,
-            where=parametric_solution_ax,
-            label="Parametric Solution",
-        )
-        self._plot(
             self.residuum,
             self.total_loss,
             self.function_loss,
@@ -119,10 +114,9 @@ class QOTracker(BaseModel):
             where=all_ax,
             label="All",
             logy=True,
-            logx=True,
         )
         self._plot(
-            *solution_y,
+            solution_y,
             where=solution_ax,
             label="Solution",
             x=solution_x,

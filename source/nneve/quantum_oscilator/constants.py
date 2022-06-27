@@ -1,5 +1,5 @@
 import typing
-from typing import Optional
+from typing import Optional, Sequence, cast
 
 import tensorflow as tf
 from pydantic import BaseModel, Field
@@ -19,6 +19,10 @@ __all__ = [
 DEFAULT_LEARNING_RATE: float = 0.008
 DEFAULT_BETA_1: float = 0.999
 DEFAULT_BETA_2: float = 0.9999
+
+
+class Sample(tf.Tensor, Sequence[float]):
+    pass
 
 
 class QOConstants(BaseModel):
@@ -51,7 +55,7 @@ class QOConstants(BaseModel):
         arbitrary_types_allowed = True
         underscore_attrs_are_private = True
 
-    def sample(self) -> tf.Tensor:
+    def sample(self) -> Sample:
         if self.__sample is None:
             self.__sample = tf.cast(
                 tf.reshape(
@@ -60,4 +64,4 @@ class QOConstants(BaseModel):
                 ),
                 dtype=tf.float32,
             )
-        return self.__sample
+        return cast(Sample, self.__sample)
