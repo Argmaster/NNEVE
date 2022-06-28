@@ -1,4 +1,4 @@
-__version__ = "22.6.27"
+__version__ = "22.6.28"
 
 
 from typing import List

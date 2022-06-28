@@ -187,6 +187,9 @@ def get_array_identity_fraction(first: NDArray, second: NDArray) -> float:
     """
     first = first.reshape(-1)
     second = second.reshape(-1)
+    assert (
+        first.shape == second.shape
+    ), f"Shapes of buffers do not match: {first.shape} != {second.shape}"
     return np.count_nonzero(first == second) / len(first)
 
 

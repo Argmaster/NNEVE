@@ -111,4 +111,4 @@ class TestQOTracker:
             buffer.seek(0)
             i1 = Image.open(DATA_DIR / f"plot_{index}.png")
             i2 = Image.open(buffer)
-            assert get_image_identity_fraction(i1, i2) > 0.99
+            assert get_image_identity_fraction(i1, i2) > 0.9
