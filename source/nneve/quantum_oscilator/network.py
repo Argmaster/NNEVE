@@ -2,9 +2,17 @@ import logging
 import pickle
 import typing
 from contextlib import suppress
-from copy import deepcopy
 from pathlib import Path
-from typing import Any, Callable, Iterable, List, Optional, Tuple, cast
+from typing import (
+    Any,
+    Callable,
+    Iterable,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    cast,
+)
 
 import tensorflow as tf
 from matplotlib import pyplot as plt
@@ -19,7 +27,7 @@ if typing.TYPE_CHECKING:
     from keras.api._v2 import keras  # noqa: F811
 
 LossFunctionT = Callable[
-    [tf.Tensor, tf.Variable, float],
+    [tf.Tensor, float],
     Tuple[tf.Tensor, Tuple[Any, ...]],
 ]
 
@@ -41,7 +49,7 @@ class QONetwork(keras.Model):
         self.constants = constants if constants is not None else QOConstants()
         self.is_console_mode = is_console_mode
         self.is_debug = is_debug
-        inputs, outputs = self.assemble_hook()
+        inputs, outputs = self.assemble_hook((50, 50))
         super().__init__(
             inputs=inputs,
             outputs=outputs,
@@ -55,7 +63,7 @@ class QONetwork(keras.Model):
         assert self.name is not None
 
     def assemble_hook(
-        self,
+        self, deep_layers: Sequence[int] = (50, 50)
     ) -> Tuple[List[keras.layers.InputLayer], List[keras.layers.Dense]]:
         # 1 value input layer
         inputs = cast(
@@ -76,47 +84,52 @@ class QONetwork(keras.Model):
         d1 = keras.layers.Dense(
             2,
             activation=tf.sin,
-            name="dense_1",
+            name="dense_input",
             dtype=tf.float32,
         )(input_and_eigenvalue)
-        # internal second layer
-        d2 = keras.layers.Dense(
-            50,
-            activation=tf.sin,
-            name="dense_2",
-            dtype=tf.float32,
-        )(d1)
-        d3 = keras.layers.Dense(
-            50,
-            activation=tf.sin,
-            name="dense_3",
-            dtype=tf.float32,
-        )(d2)
+        # internal layers
+        deep_in = d1
+        deep_out = None
+        for index, neuron_count in enumerate(deep_layers):
+            deep_out = keras.layers.Dense(
+                neuron_count,
+                activation=tf.sin,
+                name=f"dense_{index}",
+                dtype=tf.float32,
+            )(deep_in)
+            deep_in = deep_out
+            del index  # make sure no references by mistake
+        assert deep_out is not None
+        del deep_in  # make sure no references by mistake
         # single value output from neural network
         outputs = keras.layers.Dense(
             1,
-            # ; activation=tf.sin,
             name="predictions",
             dtype=tf.float32,
-        )(d3)
-        # single output from full network, λ is accessed by single call
-        # to "eigenvalue" Dense layer - much cheaper op
+        )(deep_out)
+        # eigenvalue is not acquired by single layer call because it
+        # was breaking learning process
         return [inputs], [outputs, eigenvalue_out]
 
     def get_loss_function(self) -> LossFunctionT:  # noqa: CFQ004, CFQ001
         @tf.function
         def loss_function(
             x: tf.Tensor,
-            deriv_x: tf.Variable,
             c: tf.Tensor,
         ) -> Tuple[tf.Tensor, Tuple[Any, ...]]:  # pragma: no cover
 
             current_eigenvalue = self(x)[1][0]
+            deriv_x = tf.identity(self.constants.get_sample())
 
             with tf.GradientTape() as second:
+                second.watch(deriv_x)
+
                 with tf.GradientTape() as first:
+                    first.watch(deriv_x)
                     psi, _ = parametric_solution(deriv_x)  # type: ignore
+
                 dy_dx = first.gradient(psi, deriv_x)
+
             dy_dxx = second.gradient(dy_dx, deriv_x)
 
             residuum = tf.square(
@@ -143,7 +156,6 @@ class QONetwork(keras.Model):
                 lambda_loss,
                 drive_loss,
                 c,
-                0.0,
             )  # type: ignore
 
         @tf.function
@@ -222,14 +234,9 @@ class QONetwork(keras.Model):
                 logging.info(description)
 
     def _train_step(self, x: tf.Tensor, params: QOParams) -> float:
-        deriv_x = tf.Variable(initial_value=x)
 
         with tf.GradientTape() as tape:
-            loss_value, stats = self.loss_function(
-                x,
-                deriv_x,
-                *params.get_extra(),
-            )
+            loss_value, stats = self.loss_function(x, *params.get_extra())
 
         trainable_vars = self.trainable_variables
         gradients = tape.gradient(loss_value, trainable_vars)
@@ -241,13 +248,6 @@ class QONetwork(keras.Model):
         self.constants.tracker.push_stats(*stats)
 
         return average_loss
-
-    def get_deepcopy(self) -> "QONetwork":
-        constants_copy = self.constants.copy(deep=True)
-        weights_copy = deepcopy(self.get_weights())
-        model_copy = self.__class__(constants=constants_copy)
-        model_copy.set_weights(weights_copy)
-        return model_copy
 
     def save(self, filepath: Path) -> None:  # noqa: FNE003
         weights = self.get_weights()

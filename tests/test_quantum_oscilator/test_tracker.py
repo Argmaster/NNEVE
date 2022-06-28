@@ -60,7 +60,7 @@ class TestQOTracker:
     def test_get_trace(self) -> None:
         tracker = QOTracker()
         tracker.push_stats(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0)
-        trace = tracker.get_trace(1)
+        trace = tracker.get_trace(0)
         assert isinstance(trace, str)
         print(repr(trace))
         assert trace == "epoch: 1      loss: 1.0000     λ: 2.0000     c: 7.00 "

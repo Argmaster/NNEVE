@@ -1,7 +1,7 @@
 import pytest
 
-from nneve.examples import default_qo_network
 from nneve.quantum_oscilator import QONetwork
+from nneve.quantum_oscilator.examples import default_qo_network
 
 
 @pytest.mark.parametrize("state", range(1, 8))

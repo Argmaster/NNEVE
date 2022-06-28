@@ -41,7 +41,7 @@ class QOTracker(BaseModel):
         assert len(self.eigenvalue) > 0
         assert len(self.c) > 0
         return (
-            f"epoch: {index:<6.0f} loss: {self.total_loss[-1]:<10.4f} λ: "
+            f"epoch: {index + 1:<6.0f} loss: {self.total_loss[-1]:<10.4f} λ: "
             f"{self.eigenvalue[-1]:<10.4f} c: {self.c[-1]:<5.2f}"
         )
 

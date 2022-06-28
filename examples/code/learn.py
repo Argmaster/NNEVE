@@ -32,6 +32,7 @@ network = QONetwork(constants=constants, is_debug=True)
 
 network.summary()
 matplotlib.use("Agg")
+
 for index, nn in enumerate(
     network.train_generations(
         QOParams(c=-2.0, c_step=0.16),
@@ -42,6 +43,7 @@ for index, nn in enumerate(
     x = nn.constants.get_sample()
     y2, _ = nn(x)
     nn.constants.tracker.plot(y2, x)
+    # savefig tends to create memory leaks
     plt.savefig(PLOTS_DIR / f"{index}.png")
     plt.cla()
     plt.clf()

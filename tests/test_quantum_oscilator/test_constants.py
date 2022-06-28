@@ -2,8 +2,7 @@ import typing
 
 from tensorflow import keras
 
-from nneve.quantum_oscilator.constants import QOConstants
-from nneve.quantum_oscilator.tracker import QOTracker
+from nneve.quantum_oscilator.constants import QOConstants, QOTracker
 
 if typing.TYPE_CHECKING:
     from keras.api._v2 import keras  # noqa: F811 # pragma: no cover
@@ -27,7 +26,7 @@ class TestQOConstants:
     def test_manual_construct(self):
         const = QOConstants(
             optimizer=keras.optimizers.SGD(),
-            tracker=None,
+            tracker=QOTracker(),
             k=1.0,
             mass=3.0,
             x_left=-4.0,
@@ -39,7 +38,7 @@ class TestQOConstants:
             v_drive=3.23,
         )
         assert isinstance(const.optimizer, keras.optimizers.SGD)
-        assert isinstance(const.tracker, type(None))
+        assert isinstance(const.tracker, QOTracker)
         assert const.k == 1.0
         assert const.mass == 3.0
         assert const.x_left == -4.0
@@ -52,7 +51,7 @@ class TestQOConstants:
 
     def test_create_sample(self):
         const = QOConstants(
-            tracker=None,
+            tracker=QOTracker(),
             x_left=-4.0,
             x_right=4.0,
             sample_size=500,

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from ..quantum_oscilator import QOConstants, QONetwork, QOTracker
+from .. import QOConstants, QONetwork, QOTracker
 
 __all__ = ["default_qo_network"]
 
@@ -9,7 +9,7 @@ WEIGHTS_DIR = DIR / "_weights"
 
 
 def default_qo_network(state: int = 1) -> QONetwork:
-    assert 1 <= state <= 7
+    assert 1 <= state <= 7, "Only states from 1 to 7 are available."
     constants = QOConstants(
         k=4.0,
         mass=1.0,
@@ -19,6 +19,6 @@ def default_qo_network(state: int = 1) -> QONetwork:
         sample_size=1200,
         tracker=QOTracker(),
     )
-    network = QONetwork(constants=constants, is_debug=True)
+    network = QONetwork(constants=constants)
     network.load(WEIGHTS_DIR / f"s{state}.w")
     return network

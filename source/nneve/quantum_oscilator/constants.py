@@ -1,6 +1,6 @@
 import sys
 import typing
-from typing import Optional, Sequence
+from typing import Sequence
 
 import tensorflow as tf
 from pydantic import Field
@@ -46,7 +46,7 @@ class QOConstants(Model):
             beta_2=DEFAULT_BETA_2,
         )
     )
-    tracker: Optional[QOTracker] = Field(default_factory=QOTracker)
+    tracker: QOTracker = Field(default_factory=QOTracker)
 
     k: float = Field(default=4.0)
     mass: float = Field(default=1.0)

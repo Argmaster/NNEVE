@@ -1,25 +1,32 @@
 # NNEVE
 
-Neural network based eigenvalue estimator for quantum oscillator problem.
+NNEVE is a collection of neural network based solutions to physics based
+problems. As for now only network for quantum oscillator approximation is fully
+implemented. Hopefully soon will arrive neural network for solving
+Navier-Stokes equation based on limited number of measurement points..
 
 # Installation
 
-To install this project from PyPI use following command
+This project is uploaded to PyPI as `nneve`, therefore can be installed with
+following command
 
 ```bash
-pip install nneve-project
+pip install nneve
 ```
 
-# Quick start
+At least Python 3.7 is required.
 
-To view quantum oscillator approximation for states 1 to 7 you can use
-precalculated weights:
+# Quick example
+
+To view quantum oscillator approximation for states 1 to 7 you can load
+precalculated weights and acquire model object with following snippet:
 
 ```python
 from nneve.examples import default_qo_network
 
 # network with weights for state 1
 network = default_qo_network(state=1)
+network.plot_solution()
 
 ```
 
