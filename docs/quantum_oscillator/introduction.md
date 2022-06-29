@@ -1,4 +1,4 @@
-# Introduction for Quantum Oscilator problem
+# Introduction for Quantum Oscillator problem
 
 The goal of this project was not so much to implement the network itself, but
 to verify how efficiently differential equations with an eigenproblem can be
@@ -54,7 +54,7 @@ returned from it into the equation below
 </figure>
 
 - $f_b$ arbitrary constant
-- $g(x)$ [boundary condition](/quantum_oscilator/introduction/#equation-3)
+- $g(x)$ [boundary condition](/quantum_oscillator/introduction/#equation-3)
 - $N(x, \lambda )$ - our neural network
 
 <figure markdown>
@@ -76,11 +76,11 @@ returned from it into the equation below
   <figcaption>(4)</figcaption>
 </figure>
 
-By rearranging [(1)](/quantum_oscilator/introduction/#maths-behind-the-problem)
-to form (4) we are able to use it to measure how far from exact eigenfunction
-and exact eigenvalue is current state of neural network. To achieve this we
-have to replace $f(x)$ with $f(x, \lambda )$ and use $\lambda$ retuned from
-network.
+By rearranging
+[(1)](/quantum_oscillator/introduction/#maths-behind-the-problem) to form (4)
+we are able to use it to measure how far from exact eigenfunction and exact
+eigenvalue is current state of neural network. To achieve this we have to
+replace $f(x)$ with $f(x, \lambda )$ and use $\lambda$ retuned from network.
 
 Therefore without any prepared input data, just based on loss function and back
 propagation we can move from a random state of network to an approximation of

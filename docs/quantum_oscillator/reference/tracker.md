@@ -7,7 +7,7 @@
 !!! note
 
     `#!python class QOTracker` is an element of internal API of
-    <span style="color:#cf970a;">**nneve**</span>.<span style="color:#0d75fc;">**quantum_oscilator**</span>
+    <span style="color:#cf970a;">**nneve**</span>.<span style="color:#0d75fc;">**quantum_oscillator**</span>
     subpackage was only ment to interact with `#!python class QONetwork` and `#!python class QOConstants`.
 
 `#!python class QOTracker` is responsible for gathering network state metrics
@@ -18,6 +18,11 @@ to create network status messages that are shown on the command line while the
 network is being learned.
 
 ## Instance attributes
+
+!!! note
+
+    - Attributes are mutable
+    - Arbitrary types are allowed to be used as attribute values
 
 ### `#!python c: float`
 

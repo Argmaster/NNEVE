@@ -1,4 +1,4 @@
-from nneve.quantum_oscilator.params import QOParams
+from nneve.quantum_oscillator.params import QOParams
 
 ALT_C: float = 13.0
 ALT_C_STEP: float = -3.0

@@ -5,9 +5,12 @@ import matplotlib
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
-from nneve.quantum_oscilator.network import QOConstants, QONetwork
-from nneve.quantum_oscilator.params import QOParams
-from nneve.quantum_oscilator.tracker import QOTracker
+from nneve.quantum_oscillator import (
+    QOConstants,
+    QONetwork,
+    QOParams,
+    QOTracker,
+)
 from nneve.utility.testing import disable_gpu_or_skip
 
 EXAMPLES_CODE = Path(__file__).parent

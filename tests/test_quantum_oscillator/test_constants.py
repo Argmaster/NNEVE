@@ -2,7 +2,7 @@ import typing
 
 from tensorflow import keras
 
-from nneve.quantum_oscilator.constants import QOConstants, QOTracker
+from nneve.quantum_oscillator import QOConstants, QOTracker
 
 if typing.TYPE_CHECKING:
     from keras.api._v2 import keras  # noqa: F811 # pragma: no cover

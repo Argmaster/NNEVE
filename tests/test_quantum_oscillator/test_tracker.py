@@ -7,9 +7,9 @@ import tensorflow as tf
 from matplotlib import pyplot as plt
 from PIL import Image
 
-from nneve.quantum_oscilator.network import QOConstants, QONetwork
-from nneve.quantum_oscilator.params import QOParams
-from nneve.quantum_oscilator.tracker import QOTracker
+from nneve.quantum_oscillator.network import QOConstants, QONetwork
+from nneve.quantum_oscillator.params import QOParams
+from nneve.quantum_oscillator.tracker import QOTracker
 from nneve.utility import disable_gpu_or_skip, get_image_identity_fraction
 
 DIR = Path(__file__).parent

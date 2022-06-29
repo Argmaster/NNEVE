@@ -11,6 +11,10 @@ during neural network learning process. It inherits from the pydantic's
 BaseModel class to guarantee field type compatibility and their correct filling
 without manual implementation of all checks.
 
+```python title="Example construction with manual values set"
+{% include 'examples/code/new_constants.py' %}
+```
+
 ## Instance attributes
 
 !!! note
@@ -20,56 +24,104 @@ without manual implementation of all checks.
 
 ### `#!python optimizer: keras.optimizers.Optimizer`
 
+```python
+Field(
+        default=keras.optimizers.Adam(
+            learning_rate=DEFAULT_LEARNING_RATE,
+            beta_1=DEFAULT_BETA_1,
+            beta_2=DEFAULT_BETA_2,
+        )
+    )
+```
+
 Argument required for compiling a Keras model.
 
-### `#!python tracker: nneve.QOTracker`
+### `#!python tracker: QOTracker`
+
+```python
+Field(default_factory=QOTracker)
+```
 
 QOTracker class, responsible for collecting metrics during neural network
 learning process.
 
 ### `#!python k: float`
 
+```python
+Field(default=4.0)
+```
+
 Oscillator force constant.
 
 ### `#!python mass: float`
 
-Planck mass.
+```python
+Field(default=1.0)
+```
+
+Oscillator mass used in
+$[\frac{\hbar^2}{2m}\frac{\partial^2}{\partial x^2} + V(x)]\psi(x) = E\psi(x)$
 
 ### `#!python x_left: float`
+
+```python
+Field(default=-6.0)
+```
 
 Left boundary condition of our quantum harmonic oscillator model.
 
 ### `#!python x_right: float`
 
+```python
+Field(default=6.0)
+```
+
 Right boundary condition of our quantum harmonic oscillator model.
 
 ### `#!python fb: float`
 
+```python
+Field(default=0.0)
+```
+
 Constant boundary value for boundary conditions.
 
-### `#!python sample_size: int = 500`
+### `#!python sample_size: int`
+
+```python
+Field(default=1000)
+```
 
 Size of our current learning sample (number of points on the linear space).
 
-### `#!python sample_size: int = 50`
+### `#!python v_f: int`
 
-Defines number of neurons in internal dense layers responsible for learning
-function shape.
-
-### `#!python v_f: int = 1.0`
+```python
+Field(default=1.0)
+```
 
 Multiplier of regularization function which prevents our network from learning
 trivial eigenfunctions.
 
-### `#!python v_lambda: int = 1.0`
+### `#!python v_lambda: int`
+
+```python
+Field(default=1.0)
+```
 
 Multiplier of regularization function which prevents our network from learning
 trivial eigenvalues.
 
-### `#!python v_drive: int = 1.0`
+### `#!python v_drive: int`
+
+```python
+Field(default=1.0)
+```
 
 Multiplier of regularization function which motivates our network to scan for
 higher values of eigenvalues.
+
+## Instance methods
 
 ### `#!python def sample(self) -> tf.Tensor`
 

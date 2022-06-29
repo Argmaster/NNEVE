@@ -31,7 +31,7 @@ network.plot_solution()
 ```
 
 To manually run learning cycle check out
-["How to run QONetwork learning cycle"](https://argmaster.github.io/NNEVE//quantum_oscilator/learning_cycle/)
+["How to run QONetwork learning cycle"](https://argmaster.github.io/NNEVE//quantum_oscillator/learning_cycle/)
 in Quantum Oscillator section of docs.
 
 # Documentation
