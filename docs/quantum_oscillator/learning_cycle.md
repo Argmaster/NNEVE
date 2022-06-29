@@ -42,7 +42,7 @@ stuff any kind of plotting there.
 bottom)**
 
 <figure markdown>
-  ![Image title](img/s1.png){ width="1000" }
+  ![Learning graph](img/s1.png){ width="1000" }
   <figcaption>Example learning graph created using QOTracker.plot()</figcaption>
 </figure>
 

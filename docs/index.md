@@ -1,4 +1,6 @@
-# NNEVE
+<figure markdown>
+  ![NNEVE](img/nneve.jpg){ width="1000" }
+</figure>
 
 NNEVE is a collection of neural network based solutions to physics based
 problems. As for now only network for quantum oscillator approximation is fully

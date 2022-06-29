@@ -1,6 +1,6 @@
 import sys
 import typing
-from typing import Sequence
+from typing import Sequence, cast
 
 import tensorflow as tf
 from pydantic import Field
@@ -65,12 +65,15 @@ class QOConstants(Model):
 
     @cached_property
     def sample(self) -> Sample:
-        return tf.cast(
-            tf.reshape(
-                tf.linspace(self.x_left, self.x_right, self.sample_size),
-                shape=(-1, 1),
+        return cast(
+            Sample,
+            tf.cast(
+                tf.reshape(
+                    tf.linspace(self.x_left, self.x_right, self.sample_size),
+                    shape=(-1, 1),
+                ),
+                dtype=tf.float32,
             ),
-            dtype=tf.float32,
         )
 
     def get_sample(self) -> Sample:

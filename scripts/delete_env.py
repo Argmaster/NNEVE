@@ -43,6 +43,8 @@ def purge_tox_env(
 def _purge_env(name: str, ask_for_approval: bool):
     for possible_path in _get_tox_locations():
         env_path: Path = possible_path / name
+        if not env_path.exists():
+            continue
         if ask_for_approval and (
             input(f"Delete {env_path}? (y/n) ").lower() != "y"
         ):
@@ -51,7 +53,7 @@ def _purge_env(name: str, ask_for_approval: bool):
         logging.warning(f"Removed {env_path}")
         break
     else:
-        logging.warning("Tox directory not found.")
+        logging.warning("Environment not found.")
         return 3
 
 

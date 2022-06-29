@@ -1,5 +1,6 @@
 import logging
 import pickle
+import sys
 import typing
 from contextlib import suppress
 from pathlib import Path
@@ -23,6 +24,13 @@ from .constants import QOConstants
 from .layers import Eigenvalue
 from .params import QOParams
 
+if sys.version_info < (3, 8):
+    from backports.cached_property import (  # noqa # pragma: no cover
+        cached_property,
+    )
+else:
+    from functools import cached_property  # noqa # pragma: no cover
+
 if typing.TYPE_CHECKING:
     from keras.api._v2 import keras  # noqa: F811
 
@@ -36,7 +44,6 @@ class QONetwork(keras.Model):
 
     constants: QOConstants
     is_debug: bool
-    loss_function: LossFunctionT
     is_console_mode: bool
 
     def __init__(
@@ -49,13 +56,18 @@ class QONetwork(keras.Model):
         self.constants = constants if constants is not None else QOConstants()
         self.is_console_mode = is_console_mode
         self.is_debug = is_debug
+        # attribute access to cache function value
+        self.loss_function
+        # create network structure with two 50 neuron deep layers
         inputs, outputs = self.assemble_hook((50, 50))
+        # with constructor of keras.Model initialize model machinery
         super().__init__(
             inputs=inputs,
             outputs=outputs,
             name=name,
         )
-        self.loss_function = self.get_loss_function()
+        # not really needed thanks to custom train loop
+        # but is called to satisfy internals of keras
         self.compile(
             self.constants.optimizer,
             jit_compile=True,
@@ -80,14 +92,17 @@ class QONetwork(keras.Model):
             axis=1,
             name="join",
         )([inputs, eigenvalue_out])
-        # two dense layers, each with {neurons} neurons as NN body
+        # dense layer seem not to be willing to accept two inputs
+        # at the same time, therefore λ and x are bound together
+        # with help of another dense layer
         d1 = keras.layers.Dense(
             2,
             activation=tf.sin,
             name="dense_input",
             dtype=tf.float32,
         )(input_and_eigenvalue)
-        # internal layers
+        # dynamically defined number of deep layers, specified by
+        # input argument `deep_layers`. They are joined sequentially
         deep_in = d1
         deep_out = None
         for index, neuron_count in enumerate(deep_layers):
@@ -99,6 +114,8 @@ class QONetwork(keras.Model):
             )(deep_in)
             deep_in = deep_out
             del index  # make sure no references by mistake
+        # We require at least one deep layer to be available, otherwise
+        # this network makes no sense
         assert deep_out is not None
         del deep_in  # make sure no references by mistake
         # single value output from neural network
@@ -111,13 +128,15 @@ class QONetwork(keras.Model):
         # was breaking learning process
         return [inputs], [outputs, eigenvalue_out]
 
-    def get_loss_function(self) -> LossFunctionT:  # noqa: CFQ004, CFQ001
-        @tf.function
-        def loss_function(
+    @cached_property
+    def loss_function(self) -> LossFunctionT:  # noqa: CFQ004, CFQ001
+        @tf.function  # type: ignore
+        def loss_function_impl(
             x: tf.Tensor,
             c: tf.Tensor,
         ) -> Tuple[tf.Tensor, Tuple[Any, ...]]:  # pragma: no cover
-
+            # for more extensive description of loss function visit
+            # https://argmaster.github.io/NNEVE/quantum_oscillator/introduction/
             current_eigenvalue = self(x)[1][0]
             deriv_x = tf.identity(self.constants.get_sample())
 
@@ -158,7 +177,7 @@ class QONetwork(keras.Model):
                 c,
             )  # type: ignore
 
-        @tf.function
+        @tf.function  # type: ignore
         def parametric_solution(
             x: tf.Variable,
         ) -> Tuple[tf.Tensor, tf.Tensor]:  # pragma: no cover
@@ -171,25 +190,25 @@ class QONetwork(keras.Model):
                 current_eigenvalue[0],
             )
 
-        @tf.function
+        @tf.function  # type: ignore
         def boundary(x: tf.Tensor) -> tf.Tensor:  # pragma: no cover
             return (1 - tf.exp(tf.subtract(self.constants.x_left, x))) * (
                 1 - tf.exp(tf.subtract(x, self.constants.x_right))
             )
 
-        @tf.function
+        @tf.function  # type: ignore
         def potential(x: tf.Tensor) -> tf.Tensor:  # pragma: no cover
             return tf.divide(tf.multiply(self.constants.k, tf.square(x)), 2)
 
         if self.is_debug:
-            self._potential_function = potential
-            self._boundary_function = boundary
-            self._parametric_solution_function = parametric_solution
-            self._loss_function_function = loss_function
+            self.debug_potential_function = potential
+            self.debug_boundary_function = boundary
+            self.debug_parametric_solution_function = parametric_solution
+            self.debug_loss_function_function = loss_function_impl
 
         self.parametric_solution = parametric_solution
 
-        return cast(LossFunctionT, loss_function)
+        return cast(LossFunctionT, loss_function_impl)
 
     def train_generations(
         self,
@@ -247,7 +266,7 @@ class QONetwork(keras.Model):
         average_loss = tf.reduce_mean(loss_value)
         self.constants.tracker.push_stats(*stats)
 
-        return average_loss
+        return float(average_loss)
 
     def save(self, filepath: Path) -> None:  # noqa: FNE003
         weights = self.get_weights()

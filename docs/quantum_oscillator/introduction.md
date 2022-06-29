@@ -123,63 +123,12 @@ value from the lambda layer which is also the input to the network. This value
 is necessary to calculate the value of the loss function, and getting it in any
 other clever way breaks the whole learning process.
 
-```mermaid
-%%{ init : { "flowchart" : { "curve" : "basisOpen" }}}%%
-flowchart LR
-    subgraph Input
-        X((x))
-        b1((1)) ---> λ((λ))
-    end
-    subgraph Deep 0
-        n00((neuron 1))
-        n01((neuron 2))
-        n02((neuron ...))
-        n03((neuron 50))
+[//]: # "https://app.diagrams.net/"
 
-        X ---> n00
-        X ---> n01
-        X ---> n02
-        X ---> n03
-
-        λ ---> n00
-        λ ---> n01
-        λ ---> n02
-        λ ---> n03
-    end
-    subgraph Deep 1
-        n10((neuron 1))
-        n11((neuron 2))
-        n12((neuron ...))
-        n13((neuron 50))
-
-        n00 ---> n10
-        n00 ---> n11
-        n00 ---> n12
-        n00 ---> n13
-
-        n01 ---> n10
-        n01 ---> n11
-        n01 ---> n12
-        n01 ---> n13
-
-        n02 ---> n10
-        n02 ---> n11
-        n02 ---> n12
-        n02 ---> n13
-
-        n03 ---> n10
-        n03 ---> n11
-        n03 ---> n12
-        n03 ---> n13
-    end
-    subgraph Output
-        N(("N(x, λ)"))
-        n10 ---> N
-        n11 ---> N
-        n12 ---> N
-        n13 ---> N
-    end
-```
+<figure markdown>
+  ![Network graph](img/network.png){ width="1000" }
+  <figcaption>Neural network structure</figcaption>
+</figure>
 
 ## Code flow
 

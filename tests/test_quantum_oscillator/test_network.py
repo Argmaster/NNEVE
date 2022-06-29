@@ -37,7 +37,7 @@ class TestQOTracker:
         assert x.shape == (SAMPLE_SIZE, 1)
         assert x.dtype == tf.float32
 
-        retval = network._boundary_function(x)
+        retval = network.debug_boundary_function(x)
 
         assert isinstance(retval, tf.Tensor)
         assert retval.shape == (SAMPLE_SIZE, 1)
@@ -49,7 +49,7 @@ class TestQOTracker:
         assert x.shape == (SAMPLE_SIZE, 1)
         assert x.dtype == tf.float32
 
-        retval = network._potential_function(x)
+        retval = network.debug_potential_function(x)
 
         assert isinstance(retval, tf.Tensor)
         assert retval.shape == (SAMPLE_SIZE, 1)
@@ -64,7 +64,7 @@ class TestQOTracker:
         deriv_x = tf.Variable(initial_value=x)
         assert x.shape == deriv_x.shape == (SAMPLE_SIZE, 1)
 
-        loss, eigenvalue = network._parametric_solution_function(deriv_x)  # type: ignore
+        loss, eigenvalue = network.debug_parametric_solution_function(deriv_x)  # type: ignore
 
         assert isinstance(loss, tf.Tensor)
         assert isinstance(eigenvalue, tf.Tensor)
