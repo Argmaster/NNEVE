@@ -7,7 +7,7 @@ from matplotlib.figure import Figure
 from numpy.typing import NDArray
 from PIL import Image
 
-from nneve.benchmark import get_image_identity_fraction, plot_multi_sample
+from nneve.utility import get_image_identity_fraction, plot_multi_sample
 
 DIR = Path(__file__).parent
 DATA_DIR = DIR / "data"

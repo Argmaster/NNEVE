@@ -6,7 +6,7 @@ import pytest
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
-from nneve.benchmark import (
+from nneve.utility import (
     datetag,
     disable_gpu_or_skip,
     get_sys_info,
@@ -14,7 +14,7 @@ from nneve.benchmark import (
     plot_multi_sample,
     skip_if_no_gpu,
 )
-from nneve.benchmark.plotting import pretty_bytes
+from nneve.utility.plotting import pretty_bytes
 
 DIR = Path(__file__).parent
 DATA_DIR = DIR / "data"

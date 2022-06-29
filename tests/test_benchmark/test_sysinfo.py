@@ -1,5 +1,5 @@
-from nneve.benchmark import SysInfo, get_sys_info
-from nneve.benchmark.sysinfo import (
+from nneve.utility import SysInfo, get_sys_info
+from nneve.utility.sysinfo import (
     CpuInfo,
     GpuInfo,
     PlatformInfo,
@@ -18,5 +18,5 @@ def test_get_sys_info():
     assert isinstance(info.memory, SysMemInfo)
     assert isinstance(info.tensorflow, TfInfo)
     assert isinstance(info.gpu, list)
-    if len(info.gpu) != 0:
+    if len(info.gpu) != 0:  # pragma: no cover
         assert isinstance(info.gpu[0], GpuInfo)

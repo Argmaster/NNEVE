@@ -3,5 +3,3 @@
 -r requirements-docs.txt
 -r requirements-min.txt
 -r requirements-test.txt
-# pre-commit
-pre-commit==2.18.1

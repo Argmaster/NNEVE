@@ -15,6 +15,7 @@ omit =
     *test_benchmarks_suite*
     *cli_toggle.py
     *examples
+    *__main__.py
 exclude_lines =
     # Have to re-enable the standard pragma
     pragma: no cover
@@ -22,6 +23,8 @@ exclude_lines =
     # Don't complain about missing debug-only code:
     def __repr__
     if self\.debug
+    if self\.is_debug
+    if typing\.TYPE_CHECKING
 
     # Don't complain if tests don't hit defensive assertion code:
     raise AssertionError

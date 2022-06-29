@@ -1,0 +1,69 @@
+name: Test suite CI run
+
+on:
+  push:
+    branches: ["main", "feature/**", "hotfix/**"]
+  pull_request:
+    types: [opened, reopened]
+    branches: ["*"]
+  workflow_dispatch: {}
+
+jobs:
+  python_test_suite:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+      max-parallel: 4
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.7"
+          architecture: "x64"
+          cache: pip
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+          architecture: "x64"
+          cache: pip
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+          architecture: "x64"
+          cache: pip
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+          architecture: "x64"
+          cache: pip
+
+      - run: python -m pip install tox
+
+      - name: "Test suite on Python 3.7"
+        run: tox -e py37 -vv
+
+      - name: "Test suite on Python 3.8"
+        run: tox -e py38 -vv
+
+      - name: "Test suite on Python 3.9"
+        run: tox -e py39 -vv
+
+      - name: "Test suite on Python 3.10"
+        run: tox -e py310 -vv
+
+      - name: "Code quality checks"
+        run: tox -e check -vv
+
+      - name: "Static type checking"
+        run: tox -e mypy -vv
