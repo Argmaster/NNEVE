@@ -1,4 +1,4 @@
-![NNEVE](https://raw.githubusercontent.com/Argmaster/NNEVE/main/docs/img/nneve.png)
+![NNEVE](https://raw.githubusercontent.com/Argmaster/NNEVE/main/docs/img/nneve.jpg)
 
 NNEVE is a collection of neural network based solutions to physics based
 problems. As for now only network for quantum oscillator approximation is fully
