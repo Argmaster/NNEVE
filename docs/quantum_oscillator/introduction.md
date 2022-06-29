@@ -116,6 +116,36 @@ between successive states.
 
 - $c$ - variable increased in regular intervals
 
+## Problem we are solving
+
+To make use of above theory we created network for solving Schrodinger's
+equation. In our case it takes following form
+
+<figure markdown>
+  $$
+  \left[ \frac{\hbar^2}{2m}\frac{\partial^2}{\partial x^2} + V(x) \right] \psi(x) = E\psi(x)
+  $$
+  <figcaption>(8)</figcaption>
+</figure>
+
+With $V(x)$ defined as
+
+<figure markdown>
+  $$
+  \frac{1}{2}kx^2
+  $$
+  <figcaption>(9)</figcaption>
+</figure>
+
+The exact solution of this equation has following form
+
+<figure markdown>
+  $$
+  \psi _n(x) = \frac{1}{\sqrt{2^nn!}}\frac{e^{-\frac{x^2}{2}}}{\pi ^ {\frac{1}{4}}}H_n(x) \;\;\;\;\;\;\;\;\;\;\; E_n = n + \frac{1}{2}
+  $$
+  <figcaption>(10)</figcaption>
+</figure>
+
 ## Network structure
 
 The network is a simple sequential model. The only unusual thing is returning a
