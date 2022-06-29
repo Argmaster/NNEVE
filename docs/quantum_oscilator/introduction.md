@@ -16,11 +16,12 @@ one.
 
 Consider a mathematical problem of the following form
 
-##### Equation 1
-
-$$
-\mathcal{L}f(x) = \lambda f(x)
-$$
+<figure markdown>
+  $$
+  \mathcal{L}f(x) = \lambda f(x)
+  $$
+  <figcaption>(1)</figcaption>
+</figure>
 
 - $x$ a variable
 - $\mathcal{L}$ is a differential operator which depends on $x$ and its
@@ -42,42 +43,44 @@ As output, we also expect two values:
   $x_R$ range - $f(x)$ approximation
 - $\lambda$ - eigenvalue approximation selected by neural network
 
-To use our neural network as a proxy for $f(x)$ we need to put the values
+To use our neural network as a replacement for $f(x)$ we need to put the values
 returned from it into the equation below
 
-##### Equation 2
-
-$$
-f(x,λ) = f_b + g(x)N(x,λ)
-$$
+<figure markdown>
+  $$
+  f(x,λ) = f_b + g(x)N(x,λ)
+  $$
+  <figcaption>(2)</figcaption>
+</figure>
 
 - $f_b$ arbitrary constant
 - $g(x)$ [boundary condition](/quantum_oscilator/introduction/#equation-3)
 - $N(x, \lambda )$ - our neural network
 
-##### Equation 3
-
-$$
-g(x) = (1 −e^{−(x−x_L)})(1 − e^{−(x−x_R)})
-$$
+<figure markdown>
+  $$
+  g(x) = (1 −e^{−(x−x_L)})(1 − e^{−(x−x_R)})
+  $$
+  <figcaption>(3)</figcaption>
+</figure>
 
 - $x_L$ minimum (left) value in the examined range
 - $x_R$ maximum (right) value in the examined range
 
 ## Loss function
 
-##### Equation 4
+<figure markdown>
+  $$
+  \mathcal{L}f(x) - λf(x) = 0
+  $$
+  <figcaption>(4)</figcaption>
+</figure>
 
-$$
-\mathcal{L}f(x) - λf(x) = 0
-$$
-
-By rearranging [Equation 1](/quantum_oscilator/introduction/#equation-1) to
-form [Equation 4](/quantum_oscilator/introduction/#equation-4) we are able to
-use it to measure how far from exact eigenfunction and exact eigenvalue is
-current state of neural network. We are replacing $f(x)$ with
-[$f(x, \lambda )$](/quantum_oscilator/introduction/#equation-2) and using
-$\lambda$ retuned from network.
+By rearranging [(1)](/quantum_oscilator/introduction/#maths-behind-the-problem)
+to form (4) we are able to use it to measure how far from exact eigenfunction
+and exact eigenvalue is current state of neural network. To achieve this we
+have to replace $f(x)$ with $f(x, \lambda )$ and use $\lambda$ retuned from
+network.
 
 Therefore without any prepared input data, just based on loss function and back
 propagation we can move from a random state of network to an approximation of
@@ -85,39 +88,40 @@ the equation solution.
 
 ## Regularizators
 
-To teach a neural network multiple solutions to a given equation, it is
-necessary to add additional components to the cost function that will prevent
-the neural network from staying with trivial solutions and force transitions
+To find multiple solutions of given equation with this neural network, it is
+necessary to add additional components to the loss function which will prevent
+the neural network from staying in trivial solution state and force transitions
 between successive states.
 
-##### Equation 5
+<figure markdown>
+  $$
+  L_f = \frac{1}{f(x, \lambda )^2}
+  $$
+  <figcaption>(5) - avoid trivial solutions</figcaption>
+</figure>
 
-$$
-L_f = \frac{1}{f(x, \lambda )^2}
-$$
+<figure markdown>
+  $$
+  L_{\lambda} = \frac{1}{\lambda^2}
+  $$
+  <figcaption>(6) - avoid trivial solutions</figcaption>
+</figure>
 
-$$
-L_{\lambda} = \frac{1}{\lambda^2}
-$$
-
-Those values forces network to avoid learning trivial solutions.
-
-##### Equation 6
-
-$$
-L_{drive} = e ^ {-\lambda + c}
-$$
+<figure markdown>
+  $$
+  L_{drive} = e ^ {-\lambda + c}
+  $$
+  <figcaption>(7) - push to subsequent solutions</figcaption>
+</figure>
 
 - $c$ - variable increased in regular intervals
-
-This value forces network to look for other solutions to given problem.
 
 ## Network structure
 
 The network is a simple sequential model. The only unusual thing is returning a
 value from the lambda layer which is also the input to the network. This value
 is necessary to calculate the value of the loss function, and getting it in any
-other clever way spoils the whole learning process.
+other clever way breaks the whole learning process.
 
 ```mermaid
 %%{ init : { "flowchart" : { "curve" : "basisOpen" }}}%%
@@ -175,4 +179,19 @@ flowchart LR
         n12 ---> N
         n13 ---> N
     end
+```
+
+## Code flow
+
+```mermaid
+flowchart LR
+QOT((QOTracker))
+QOC((QOConstants))
+QON((QONetwork))
+QOP((QOParams))
+tr1["train_generations(...)"]
+tr2["train(...)"]
+  QOT --> QOC --> QON --> tr1
+  QOP --> tr1
+  tr1 ---> tr2 ---> tr1
 ```

@@ -6,10 +6,10 @@
 
 ## Introduction
 
-QOParams class is responsible for holding variables which can change during the
-learning of QONetwork. This class can (should) also change the values of the
-variables in using a dedicated method that is called after each generation of
-the learning process.
+`#!python class QOParams` is responsible for holding variables which can change
+during the learning of `#!python class QONetwork`. This class can (should) also
+change the values of the variables in using a dedicated method that is called
+after each generation of the learning process.
 
 ## Instance attributes
 

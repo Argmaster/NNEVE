@@ -6,11 +6,17 @@
 
 ## Introduction
 
-`#!python class QOConstants` contains constants and configuration of our neural
-network model. It inherits after the pydantics's BaseModel class to ensure
-compatibility of instances of our neural network with defined model.
+`#!python class QOConstants` contains physical constants used in loss function
+during neural network learning process. It inherits from the pydantic's
+BaseModel class to guarantee field type compatibility and their correct filling
+without manual implementation of all checks.
 
 ## Instance attributes
+
+!!! note
+
+    - Attributes are mutable
+    - Arbitrary types are allowed to be used as attribute values
 
 ### `#!python optimizer: keras.optimizers.Optimizer`
 
