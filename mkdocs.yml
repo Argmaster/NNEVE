@@ -20,6 +20,7 @@ nav:
       - Introduction: "quantum_oscillator/introduction.md"
       - Learning cycle: "quantum_oscillator/learning_cycle.md"
       - Reference:
+          - class QONetwork: "quantum_oscillator/reference/network.md"
           - class QOConstants: "quantum_oscillator/reference/constants.md"
           - class QOTracker: "quantum_oscillator/reference/tracker.md"
           - class QOParams: "quantum_oscillator/reference/params.md"
@@ -59,6 +60,11 @@ plugins:
   - search
   - macros:
       include_dir: .
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
 
 extra_javascript:
   - termynal.js
