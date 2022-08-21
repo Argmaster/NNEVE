@@ -1,0 +1,3 @@
+recursive-include source/nneve *
+recursive-exclude source/nneve *.pyc
+recursive-include docs *
