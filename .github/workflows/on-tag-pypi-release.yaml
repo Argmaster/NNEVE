@@ -1,0 +1,37 @@
+name: Create release on PyPI
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+          architecture: "x64"
+          cache: pip
+
+      - name: Install tox
+        run: |
+          pip install -r requirements-min.txt
+
+      - name: Create distribution
+        run: |
+          tox -e build
+
+      - name: Publish a Python distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}

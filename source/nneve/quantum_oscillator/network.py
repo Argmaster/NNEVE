@@ -53,6 +53,21 @@ class QONetwork(keras.Model):
         is_console_mode: bool = True,
         name: str = "QONetwork",
     ):
+        """Initialize quantum oscillator properties, neural network shape and
+        create loss function object.
+
+        Parameters
+        ----------
+        constants : Optional[QOConstants], optional
+            Constant values describing quantum oscillator, by default None
+        is_debug : bool, optional
+            debug mode switch, by default False
+        is_console_mode : bool, optional
+            When true, rich.Progress will be used to manifest learning
+            process progress, by default True
+        name : str, optional
+            Aesthetic only, name for model, by default "QONetwork"
+        """
         self.constants = constants if constants is not None else QOConstants()
         self.is_console_mode = is_console_mode
         self.is_debug = is_debug
@@ -77,6 +92,19 @@ class QONetwork(keras.Model):
     def assemble_hook(
         self, deep_layers: Sequence[int] = (50, 50)
     ) -> Tuple[List[keras.layers.InputLayer], List[keras.layers.Dense]]:
+        """Construct neural network structure with specified number of deep
+        layers used for transformation of input.
+
+        Parameters
+        ----------
+        deep_layers : Sequence[int], optional
+            Number and size of deep layers, by default (50, 50)
+
+        Returns
+        -------
+        Tuple[List[keras.layers.InputLayer], List[keras.layers.Dense]]
+            Input and output of neural network.
+        """
         # 1 value input layer
         inputs = cast(
             keras.layers.InputLayer,
@@ -130,6 +158,14 @@ class QONetwork(keras.Model):
 
     @cached_property
     def loss_function(self) -> LossFunctionT:  # noqa: CFQ004, CFQ001
+        """Create and return loss function used for learning process.
+
+        Returns
+        -------
+        LossFunctionT
+            loss function object.
+        """
+
         @tf.function  # type: ignore
         def loss_function_impl(
             x: tf.Tensor,
@@ -211,11 +247,25 @@ class QONetwork(keras.Model):
         return cast(LossFunctionT, loss_function_impl)
 
     def train_generations(
-        self,
-        params: QOParams,
-        generations: int = 5,
-        epochs: int = 1000,
+        self, params: QOParams, generations: int = 5, epochs: int = 1000
     ) -> Iterable["QONetwork"]:
+        """Train multiple generations of neural network. For each generation
+        train() method is called, followed by update of QOParams.
+
+        Parameters
+        ----------
+        params : QOParams
+            parameters describing quantum oscillator
+        generations : int, optional
+            number of generations to calculate, by default 5
+        epochs : int, optional
+            number of epochs in each generation, by default 1000
+
+        Yields
+        ------
+        Iterable[QONetwork]
+            This neural network after generation is completed.
+        """
         with suppress(KeyboardInterrupt):
             for i in range(generations):
                 logging.info(
@@ -229,6 +279,17 @@ class QONetwork(keras.Model):
     def train(  # noqa: CCR001
         self, params: QOParams, epochs: int = 10
     ) -> None:
+        """Train single generation of neural network. Single generation
+        consists of predefined number of epochs, each containing call to loss
+        function and following improvement of neural network weights.
+
+        Parameters
+        ----------
+        params : QOParams
+            parameters describing quantum oscillator
+        epochs : int, optional
+            number of epochs to calculate, by default 10
+        """
         x = self.constants.get_sample()
         if self.is_console_mode:
             with Progress() as progress:
@@ -237,7 +298,7 @@ class QONetwork(keras.Model):
                 )
 
                 for i in range(epochs):
-                    self._train_step(x, params)
+                    self.train_step(x, params)
 
                     description = self.constants.tracker.get_trace(i)
 
@@ -248,12 +309,26 @@ class QONetwork(keras.Model):
                     )
         else:
             for i in range(epochs):
-                self._train_step(x, params)
+                self.train_step(x, params)
                 description = self.constants.tracker.get_trace(i)
                 logging.info(description)
 
-    def _train_step(self, x: tf.Tensor, params: QOParams) -> float:
+    def train_step(self, x: tf.Tensor, params: QOParams) -> float:
+        """Step of learning process. Step consists of single call to loss
+        function and following improvement of network weights.
 
+        Parameters
+        ----------
+        x : tf.Tensor
+            tensor containing X values grid.
+        params : QOParams
+            parameters describing quantum oscillator.
+
+        Returns
+        -------
+        float
+            average loss of network before current improvement.
+        """
         with tf.GradientTape() as tape:
             loss_value, stats = self.loss_function(x, *params.get_extra())
 
@@ -269,15 +344,32 @@ class QONetwork(keras.Model):
         return float(average_loss)
 
     def save(self, filepath: Path) -> None:  # noqa: FNE003
+        """Save model object to file.
+
+        Parameters
+        ----------
+        filepath : Path
+            Path to file where model data should be saved.
+            If file exists, it will be overwritten.
+        """
         weights = self.get_weights()
         with filepath.open("wb") as file:
             pickle.dump(weights, file)
 
     def load(self, filepath: Path) -> None:  # noqa: FNE004
+        """Load model data from file.
+
+        Parameters
+        ----------
+        filepath : Path
+            Path to file where model data is stored.
+        """
         with filepath.open("rb") as file:
             weights = pickle.load(file)
         self.set_weights(weights)
 
     def plot_solution(self) -> None:
+        """Generate a plot with pyplot.plot which shows solution currently
+        proposed by neural network."""
         x = self.constants.get_sample()
         plt.plot(x, self(x)[0])

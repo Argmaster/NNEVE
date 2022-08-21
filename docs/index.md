@@ -30,11 +30,16 @@ To view quantum oscillator approximation for states 1 to 7 you can load
 precalculated weights and acquire model object with following snippet:
 
 ```python
-from nneve.examples import default_qo_network
+from matplotlib import pyplot as plt
 
-# network with weights for state 1
+from nneve.quantum_oscillator.examples import default_qo_network
+
+# acquire network object with precalculated weights
+# for quantum oscillator state 1 (base)
 network = default_qo_network(state=1)
 network.plot_solution()
+
+plt.plot()
 
 ```
 

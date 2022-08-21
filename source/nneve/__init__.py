@@ -1,6 +1,5 @@
-__version__ = "22.6.28"
+__version__ = "22.8.20"
 
+from . import quantum_oscillator
 
-from typing import List
-
-__all__: List[str] = []
+__all__ = ["quantum_oscillator"]
