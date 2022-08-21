@@ -1,6 +1,5 @@
 # Pytest + plugins
 pytest==7.1.2
-pytest-flake8==1.1.1
 pytest-cov==3.0.0
 # Hypothesis https://hypothesis.readthedocs.io/en/latest/data.html
 hypothesis>=6.46.0,<6.47.0
